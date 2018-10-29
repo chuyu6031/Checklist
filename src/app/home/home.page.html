@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Quick List
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+
+  <section *ngIf="dataService.checklists.length != 0; else Intro">
+    <!-- sort by number of remaining items -->
+    <ion-label>Sort By Number of Remaining Items</ion-label>
+    <ion-button size="small" shape="round" (click)="sortByRemainDes()">Descending &#8595;</ion-button>
+    <ion-button size="small" shape="round" (click)="sortByRemainAsc()">Ascending &#8593;</ion-button>
+
+    <!-- A list of checklists -->
+    <ion-list *ngFor="let checklist of dataService.checklists">
+
+      <ion-item>
+        <ion-label (click)="selectList(checklist)">{{ checklist.title }}</ion-label>
+        <ion-label id="remainItem"> {{ checklist.remainItems }} remaining items</ion-label>
+        <ion-icon (click)="removeChecklist(checklist)" name="trash"></ion-icon>
+      </ion-item>
+
+    </ion-list>
+  </section>
+
+  <!-- If there hasn't been anything created -->
+  <ng-template #Intro>
+    <ion-item>
+      <div>You must be new here. Create a list and get to work.</div>
+    </ion-item>
+  </ng-template>
+
+
+  <!-- Creation Section -->
+  <ion-item>
+    <ion-input placeholder="New List" [(ngModel)]="listTitle"></ion-input>
+  </ion-item>
+
+  <ion-button size="small" shape="round" (click)="addChecklist(); resetInput()">Add New List</ion-button>
+
+</ion-content>

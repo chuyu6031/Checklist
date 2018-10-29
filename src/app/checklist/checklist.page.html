@@ -1,0 +1,102 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <ion-icon (click)="backHome()" name="arrow-back"> </ion-icon> {{ checklist?.title }}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <!-- A list of items created -->
+  <section *ngIf="checklist?.items.length != 0; else Intro">
+    <ion-button size="small" shape="round" (click)="sortPriority()">Sort By Priority</ion-button>
+    <ion-button size="small" shape="round" (click)="sortAlphabet()">Sort Alphabetically</ion-button>
+
+    <ion-item>
+      <ion-label>Hide Completed</ion-label>
+      <ion-toggle [checked]="checklist?.hideCompletion" (ionChange)=" changeHide()"></ion-toggle>
+    </ion-item>
+
+
+    <ion-list *ngFor="let item of checklist?.items">
+      <!-- If hideCompletion = false, show all items -->
+      <section *ngIf="checklist?.hideCompletion === false; else HideCompletion">
+        <!-- If item is checked, opacity = 0.5 -->
+        <ion-list *ngIf="item.checked; else Unchecked">
+          <ion-item class="greyOut">
+            <ion-checkbox [checked]="item.checked" (ionChange)="toggleItem(item)" [id]="item.checked"></ion-checkbox>
+            <ion-label>{{ item.title }}</ion-label>
+            <ion-icon name="create" (click)="editWindow(item)"></ion-icon>
+          </ion-item>
+
+          <ion-item class="greyOut">
+            <ion-select [value]="item.priority_num" okText="Okay" cancelText="Dismiss" (ionChange)="priorityItem(item, $event.detail.value)">
+              <ion-select-option value="c">😑</ion-select-option>
+              <ion-select-option value="b">😯</ion-select-option>
+              <ion-select-option value="a">😖</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-list>
+
+        <ng-template #Unchecked>
+          <ion-item>
+            <ion-checkbox [checked]="item.checked" (ionChange)="toggleItem(item)" [id]="item.checked"></ion-checkbox>
+            <ion-label>{{ item.title }}</ion-label>
+            <ion-icon name="create" (click)="editWindow(item)"></ion-icon>
+          </ion-item>
+
+          <ion-item>
+            <ion-select [value]="item.priority_num" okText="Okay" cancelText="Dismiss" (ionChange)="priorityItem(item, $event.detail.value)">
+              <ion-select-option value="c">😑</ion-select-option>
+              <ion-select-option value="b">😯</ion-select-option>
+              <ion-select-option value="a">😖</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ng-template>
+      </section>
+
+      <!-- if hideCompletion = true, show only unchecked items -->
+      <ng-template #HideCompletion>
+        <section *ngIf="item.checked === false">
+          <ion-list [id]="item.id">
+            <ion-item>
+              <ion-checkbox [checked]="item.checked" (ionChange)="toggleItem(item)" [id]="item.checked"></ion-checkbox>
+              <ion-label>{{ item.title }}</ion-label>
+              <ion-icon name="create" (click)="editWindow(item)"></ion-icon>
+            </ion-item>
+
+            <ion-item>
+              <ion-select [value]="item.priority_num" okText="Okay" cancelText="Dismiss" (ionChange)="priorityItem(item, $event.detail.value)">
+                <ion-select-option value="c">😑</ion-select-option>
+                <ion-select-option value="b">😯</ion-select-option>
+                <ion-select-option value="a">😖</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-list>
+        </section>
+
+      </ng-template>
+    </ion-list>
+
+  </section>
+
+  <!-- When nothing hasn't been added into the item list -->
+
+  <ng-template #Intro>
+
+    <ion-item>
+      <div>There's nothing in this list! Add something here.</div>
+    </ion-item>
+
+  </ng-template>
+
+
+  <!-- Add item section -->
+
+  <ion-item>
+    <ion-input [(ngModel)]="itemTitle" placeholder="Add something here"></ion-input>
+    <ion-button size="small" shape="round" name="checkbox" (click)="addItem(); resetInput()">Add</ion-button>
+  </ion-item>
+</ion-content>
+
+<!-- [ngModel]="" (ngModelChange)="item.title = $event." -->

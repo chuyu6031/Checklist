@@ -1,0 +1,7 @@
+{
+  "name": "listmaker3000",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
